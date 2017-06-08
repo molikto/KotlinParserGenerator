@@ -20,7 +20,7 @@ And there are two ways to do these:
 And this is of the second kind.
 
 
-## Just a DEMO
+## Just a DEMO. NOT A LIBRARY!
 
 But if you want some extra functionality, I might implement it.
 
@@ -37,7 +37,7 @@ But if you want some extra functionality, I might implement it.
 
 ## How to use it?
 
-Copy the files to proper places in your project. The object definition is written in
+Copy `ParserGenerator.scala` and files in package `org.snailya.kotlinparsergenerator` to proper places in your project. The object definition is written in
 the bottom of `ParserGenerator.scala` file, with small examples
 
 
@@ -48,7 +48,7 @@ If you define some `ConvertedType`, the converter should be defined in same pack
 ## Sample
 
 ```
-object BaseSpec extends Spec("org.snailya.kotlinparsergenerator.data", new File("app/src/main/java"), Seq.empty) {
+object BaseSpec extends Spec("org.snailya.demo.data", new File("app/src/main/java"), Seq.empty) {
 
 
   lazy val stringToUri = ConvertedType(string, JvmType("Uri", "defaultUri").?, "stringToUri")

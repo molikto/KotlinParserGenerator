@@ -201,6 +201,9 @@ import java.util.*
 import android.text.TextUtils
 import android.util.Log
 import org.snailya.kotlinparsergenerator.*
+import snailya.org.kotlinparsergenerator.JsonAdapter
+import snailya.org.kotlinparsergenerator.ObjectJsonAdapter
+import snailya.org.kotlinparsergenerator.EnumJsonAdapter
 import java.io.IOException
 import java.text.SimpleDateFormat
 """.stripMargin
@@ -291,7 +294,7 @@ class Spec(packageName: String, root: File, imports: Seq[String]) {
 }
 
 
-object BaseSpec extends Spec("org.snailya.kotlinparsergenerator.data", new File("app/src/main/java"), Seq.empty) {
+object BaseSpec extends Spec("org.snailya.demo.data", new File("app/src/main/java"), Seq.empty) {
 
   lazy val stringToUri = ConvertedType(string, JvmType("Uri", "defaultUri").?, "stringToUri")
 

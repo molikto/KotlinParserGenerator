@@ -1,4 +1,4 @@
-package org.snailya.kotlinparsergenerator.data;
+package org.snailya.demo.data;
 
 
 import com.fasterxml.jackson.core.JsonGenerator
@@ -10,11 +10,11 @@ import java.io.*
 import java.util.*
 import android.text.TextUtils
 import org.snailya.kotlinparsergenerator.*
+import snailya.org.kotlinparsergenerator.JsonAdapter
+import snailya.org.kotlinparsergenerator.ObjectJsonAdapter
+import snailya.org.kotlinparsergenerator.EnumJsonAdapter
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.regex.Pattern
-import snailya.org.kotlinparsergenerator.ObjectJsonAdapter
-import snailya.org.kotlinparsergenerator.JsonAdapter
 
 
 data class Location(
@@ -77,7 +77,6 @@ data class Location(
     }
   }
 /* EXTRA CODE START */
-
   fun yourOwnCode() = "Will not be replaced, we mark them using simple Java/Kotlin block comments"
 /* EXTRA CODE END */
 }
