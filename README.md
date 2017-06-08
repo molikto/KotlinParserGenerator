@@ -29,7 +29,7 @@ But if you want some extra functionality, I might implement it.
 
 * hackable: it is 150 line of Scala, plus like 100 line of Kotlin
 * it targets to Kotlin, null-field safe (everything has a default value, you can change it to throw exception if you like)
-* consistent api (in Java)
+* consistent api (when used in Kotlin)
     * for primitive types: `JsonAdapter.intAdapter` etc.
     * for object/enum types: `TypeName.Companion`
     * array types: `TypeName.Companion.arrayAdapter`, it is kind of ugly for reflection based API to deal with generic lists
