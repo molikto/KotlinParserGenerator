@@ -151,5 +151,5 @@ val  stringToUri = object : ConvertedJsonAdapter<String, Uri?>(stringAdapter) {
 
 ## Extra
 
-* The code is correctly in Scala, but can be changed to Kotlin easily. (but we cannot use `string.?` then)
+* The code is currently in Scala, but can be changed to Kotlin easily. (but we cannot use `string.?` then)
 * Why not annotation? Because they are not simple, and they are not first-class citizen
