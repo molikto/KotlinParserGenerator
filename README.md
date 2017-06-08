@@ -47,7 +47,7 @@ If you define some `ConvertedType`, the converter should be defined in same pack
 
 ## Sample
 
-```
+```scala
 object BaseSpec extends Spec("org.snailya.demo.data", new File("app/src/main/java"), Seq.empty) {
 
 
@@ -73,7 +73,7 @@ BaseSpec.codegen()
 
 generates
 
-```
+```kotlin
 data class Location(
         @JvmField val latitude: Double,
         @JvmField val longitude: Double,
@@ -142,7 +142,7 @@ data class Location(
 
 Sample converter definition
 
-```
+```kotlin
 val  stringToUri = object : ConvertedJsonAdapter<String, Uri?>(stringAdapter) {
   override fun to(from: String): Uri? = if (from.isEmpty()) null else try { Uri.parse(from) } catch (e: Exception) { null }
   override fun from(to: Uri?): String = to?.toString() ?: ""
