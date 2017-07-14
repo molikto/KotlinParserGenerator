@@ -31,9 +31,8 @@ val ParseFinishStart = "/* PARSE FINISH START */"
 val ParseFinishMark = "/* PARSE FINISH MARK */"
 val ParseFinishEnd = "/* PARSE FINISH END */"
 
-fun indent(i: String, statement: String) = {
+fun indent(i: String, statement: String): String =
   statement.split("\n").filter{ !it.trim().isEmpty() }.map {i + it }.joinToString("\n")
-}
 
 
 
@@ -98,18 +97,18 @@ data class HandmadeObjectType(override val name: String) : Type(name) {
   override fun parse() = parserObject() + ".parse(jp)"
 }
 
-data class Field(val name: String, val ty: Type, val jsonName: String?, val isPrivate: Boolean = false) {
+data class Field(val name: String, val ty: Type, val jsonName: String?, val isPrivate: Boolean = false, val deprecated: String = "") {
 
   val jn= jsonName ?: name
   fun parse() = """"$jn" -> { $name = ${ty.parse()} }"""
 
-  fun declareTemp() = "var $name: ${ty.name} = ${ty.default()}"
+  fun declareTemp() ="var $name: ${ty.name} = ${ty.default()}"
 
   fun tempToField() = name // if (ty.isInstanceOf[NullableType]) name else name + "!!"
 
-  fun declare() = "        ${(if (isPrivate) "private " else "@JvmField ")}val $name: ${ty.name}"
+  fun declare() = "        ${ (if (!deprecated.isEmpty()) "@Deprecated(\"$deprecated\") " else "")}${(if (isPrivate) "private " else "@JvmField ")}val $name: ${ty.name}"
 
-  fun serialize() {
+  fun serialize() =
     if (ty == IntType || ty == DoubleType || ty == LongType) {
       """jg.writeNumberField("$jn", t.$name)"""
     } else if (ty == StringType) {
@@ -121,7 +120,6 @@ data class Field(val name: String, val ty: Type, val jsonName: String?, val isPr
     } else {
       """jg.writeFieldName("$jn"); ${ty.parserObject()}.serialize(t.$name, jg, true)"""
     }
-  }
 }
 
 
@@ -208,8 +206,8 @@ open class Spec(val packageName: String, val root: File, val imports: List<Strin
   fun list(t: Type) = ListType(t)
 
 
-  fun f(name: String, ty: Type) = Field(name, ty, null)
-  fun f(name: String,  json: String, ty: Type) = Field(name, ty, json)
+  fun f(name: String, ty: Type, deprecated: String = "") = Field(name, ty, null, deprecated = deprecated)
+  fun f(name: String,  json: String, ty: Type, deprecated: String = "") = Field(name, ty, json, deprecated = deprecated)
 
   open val defaultImports =
       """
@@ -223,11 +221,12 @@ import java.util.*
 import android.text.TextUtils
 import android.util.Log
 import org.snailya.kotlinparsergenerator.*
-import snailya.org.kotlinparsergenerator.JsonAdapter
-import snailya.org.kotlinparsergenerator.ObjectJsonAdapter
-import snailya.org.kotlinparsergenerator.EnumByOrdinalJsonAdapter
+import org.snailya.kotlinparsergenerator.JsonAdapter
+import org.snailya.kotlinparsergenerator.ObjectJsonAdapter
+import org.snailya.kotlinparsergenerator.EnumByOrdinalJsonAdapter
 import java.io.IOException
 import java.text.SimpleDateFormat
+
 """.trimMargin()
 
   val dest = File(root.toString() + "/" + packageName.replace('.', '/'))
@@ -274,7 +273,7 @@ import java.text.SimpleDateFormat
         content = content.replace(ParseFinishMark, parseComplete)
       }
     }
-    content = "package " + packageName + "\n\n" + (defaultImports + (listOf(imps, imports).flatten()).joinToString("\n")).split("\n").toSortedSet().joinToString("\n") + "\n\n\n" + content
+    content = "package " + packageName + "\n\n" + (defaultImports + "\n" + (listOf(imps, imports).flatten()).joinToString("\n")).split("\n").toSortedSet().joinToString("\n") + "\n\n\n" + content
     des.delete()
     des.createNewFile()
     val writer = PrintWriter(des)

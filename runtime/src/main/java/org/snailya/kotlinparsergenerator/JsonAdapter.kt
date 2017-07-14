@@ -1,4 +1,4 @@
-package snailya.org.kotlinparsergenerator
+package org.snailya.kotlinparsergenerator
 
 
 import com.fasterxml.jackson.core.JsonFactory

@@ -1,7 +1,8 @@
-package snailya.org.kotlinparsergenerator
+package org.snailya.kotlinparsergenerator
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
+import org.snailya.kotlinparsergenerator.JsonAdapter
 
 open class EnumByOrdinalJsonAdapter<T : Enum<*>>(val enums: Array<T>, override val empty: T) : JsonAdapter<T>() {
 

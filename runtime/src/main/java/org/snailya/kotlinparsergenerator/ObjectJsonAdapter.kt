@@ -1,10 +1,10 @@
-package snailya.org.kotlinparsergenerator
+package org.snailya.kotlinparsergenerator
 
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonToken
-import snailya.org.kotlinparsergenerator.JsonAdapter
+import org.snailya.kotlinparsergenerator.JsonAdapter
 import java.io.IOException
 
 abstract class ObjectJsonAdapter<T> : JsonAdapter<T>() {
