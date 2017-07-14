@@ -2,7 +2,7 @@
 
 # Kotlin Parser Generator
 
-This is a simple Scala script and some Kotlin file to generate JSON parsering code.
+This is a simple Kotlin script and some Kotlin file to generate JSON parsering code.
 
 Why another JSON parser library?
 
