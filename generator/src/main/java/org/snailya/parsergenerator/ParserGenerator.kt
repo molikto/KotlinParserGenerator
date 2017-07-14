@@ -1,3 +1,5 @@
+package org.snailya.parsergenerator
+
 import java.io.File
 import java.io.PrintWriter
 import java.util.*
@@ -194,6 +196,9 @@ data class ConvertedType(val json: Type, val jvm: Type, val converter: String) :
 open class Spec(val packageName: String, val root: File, val imports: List<String>) {
 
 
+  init {
+    println("root is ${root.absolutePath}")
+  }
   val int = IntType
   val long = LongType
   val double = DoubleType
@@ -306,6 +311,7 @@ import java.text.SimpleDateFormat
     es.forEach{e -> writeClass(e.name, e.codgen())}
     os.forEach{o -> writeClass(o.name, o.codgen())}
   }
+
 }
 
 
