@@ -27,7 +27,7 @@ But if you want some extra functionality, I might implement it.
 
 ## Why use it?
 
-* hackable: it is 150 line of Scala, plus like 100 line of Kotlin
+* hackable: it is 150 line of Kotlin, plus like 100 line of Kotlin
 * it targets to Kotlin, null-field safe (everything has a default value, you can change it to throw exception if you like)
 * consistent api (when used in Kotlin)
     * for primitive types: `JsonAdapter.intAdapter` etc.
@@ -47,7 +47,7 @@ If you define some `ConvertedType`, the converter should be defined in same pack
 
 ## Sample
 
-```scala
+```Kotlin
 object BaseSpec extends Spec("org.snailya.demo.data", new File("app/src/main/java"), Seq.empty) {
 
 
@@ -151,5 +151,4 @@ val  stringToUri = object : ConvertedJsonAdapter<String, Uri?>(stringAdapter) {
 
 ## Extra
 
-* The code is currently in Scala, but can be changed to Kotlin easily. (but we cannot use `string.?` then)
 * Why not annotation? Because they are not simple, and they are not first-class citizen
