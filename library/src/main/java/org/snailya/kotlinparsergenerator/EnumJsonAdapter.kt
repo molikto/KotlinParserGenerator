@@ -3,7 +3,7 @@ package snailya.org.kotlinparsergenerator
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 
-open class EnumJsonAdapter<T : Enum<*>>(val enums: Array<T>, override val empty: T) : JsonAdapter<T>() {
+open class EnumByOrdinalJsonAdapter<T : Enum<*>>(val enums: Array<T>, override val empty: T) : JsonAdapter<T>() {
 
   override fun parse(jp: JsonParser): T {
     val i = jp.valueAsInt

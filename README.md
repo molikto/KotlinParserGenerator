@@ -37,8 +37,8 @@ But if you want some extra functionality, I might implement it.
 
 ## How to use it?
 
-Copy `ParserGenerator.scala` and files in package `org.snailya.kotlinparsergenerator` to proper places in your project. The object definition is written in
-the bottom of `ParserGenerator.scala` file, with small examples
+Copy `ParserGenerator.kts` and files in package `org.snailya.kotlinparsergenerator` to proper places in your project. The object definition is written in
+the bottom of `ParserGenerator.kts` file, with small examples
 
 
 It will require you define a method `logUnknownField` in the package you choose.
