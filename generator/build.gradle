@@ -1,0 +1,10 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+}
+repositories {
+    mavenCentral()
+}

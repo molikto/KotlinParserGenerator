@@ -335,5 +335,4 @@ object BaseSpec : Spec("org.snailya.demo.data", File("library/src/main/java"), e
 }
 
 
-BaseSpec.codegen()
 
