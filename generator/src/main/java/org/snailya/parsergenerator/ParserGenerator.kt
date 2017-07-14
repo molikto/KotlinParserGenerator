@@ -21,25 +21,21 @@ import java.util.*
   */
 
 
-abstract class Global {
+val ExtraCodeStart = "/* EXTRA CODE START */"
+val ExtraCodeMark = "/* EXTRA CODE MARK */"
+val ExtraCodeEnd = "/* EXTRA CODE END */"
 
-  val ExtraCodeStart = "/* EXTRA CODE START */"
-  val ExtraCodeMark = "/* EXTRA CODE MARK */"
-  val ExtraCodeEnd = "/* EXTRA CODE END */"
+val ParseFinishStart = "/* PARSE FINISH START */"
+val ParseFinishMark = "/* PARSE FINISH MARK */"
+val ParseFinishEnd = "/* PARSE FINISH END */"
 
-  val ParseFinishStart = "/* PARSE FINISH START */"
-  val ParseFinishMark = "/* PARSE FINISH MARK */"
-  val ParseFinishEnd = "/* PARSE FINISH END */"
-
-  fun indent(i: String, statement: String) = {
-    statement.split("\n").filter{ !it.trim().isEmpty() }.map {i + it }.joinToString("\n")
-  }
+fun indent(i: String, statement: String) = {
+  statement.split("\n").filter{ !it.trim().isEmpty() }.map {i + it }.joinToString("\n")
 }
 
 
 
-
-abstract class Type(open val name: String) : Global() {
+abstract class Type(open val name: String)  {
 
   abstract fun default(): String
   abstract fun parserObject(): String
@@ -195,7 +191,7 @@ data class ConvertedType(val json: Type, val jvm: Type, val converter: String) :
 
 
 
-open class Spec(val packageName: String, val root: File, val imports: List<String>) : Global() {
+open class Spec(val packageName: String, val root: File, val imports: List<String>) {
 
 
   val int = IntType
