@@ -131,6 +131,12 @@ data class ObjectType(override val name: String, val fields: List<Field>) : Type
        |
        |data class $name(
        |${fields.map{it.declare()}.joinToString(",\n")})  : Serializable  {
+       |
+       |$ExtraCodeMark
+       |
+       |
+       |  // BELLOW IS GENERATED CODE!!! DON'T CHANGE!!!
+       |
        |  companion object : ObjectJsonAdapter<$name>() {
        |    override val empty: $name = $name(${fields.map { it.ty.default() }.joinToString(", ")})
        |    override fun parse(jp: JsonParser): $name {
@@ -156,7 +162,6 @@ data class ObjectType(override val name: String, val fields: List<Field>) : Type
        |${indent("      ", fields.map { it.serialize()}.joinToString("\n"))}
        |    }
        |  }
-       |$ExtraCodeMark
        |}
      """.trimMargin()
 
