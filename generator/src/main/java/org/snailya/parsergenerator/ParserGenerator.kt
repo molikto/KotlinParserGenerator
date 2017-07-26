@@ -3,6 +3,7 @@ package org.snailya.parsergenerator
 import java.io.File
 import java.io.PrintWriter
 import java.util.*
+import java.util.Collections.emptyList
 
 /**
   * this class generates parsers for Kotlin data classes,
@@ -218,6 +219,7 @@ open class Spec(val packageName: String, val root: File, val imports: List<Strin
       """
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
+
 import com.fasterxml.jackson.core.JsonToken
 import android.util.Log
 import android.net.Uri
