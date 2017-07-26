@@ -15,7 +15,7 @@ import java.util.Collections.emptyList
 object JsonAdapterGlobalConfig {
   var globalUnknownFieldReporter: (String, JsonAdapter<*>) -> Unit = { _, _ -> }
 
-  fun <T> logKnownField(str: String, companion: JsonAdapter<T>) {
+  fun <T> logUnknownField(str: String, companion: JsonAdapter<T>) {
     globalUnknownFieldReporter.invoke(str, companion)
   }
 }
