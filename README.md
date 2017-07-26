@@ -2,6 +2,8 @@
 
 # Kotlin Parser Generator
 
+[![](https://jitpack.io/v/molikto/KotlinParserGenerator.svg)](https://jitpack.io/#molikto/KotlinParserGenerator)
+
 This is a simple Kotlin script and some Kotlin file to generate JSON parsering code.
 
 Why another JSON parser library?
