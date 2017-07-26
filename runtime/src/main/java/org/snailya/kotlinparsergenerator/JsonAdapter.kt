@@ -11,6 +11,11 @@ import java.io.OutputStream
 import java.io.StringWriter
 import java.util.*
 
+var globalUnknownFieldReporter: (String, JsonAdapter<*>) -> Unit = { _, _ -> }
+
+fun <T> logKnownField(str: String, companion: JsonAdapter<T>) {
+  globalUnknownFieldReporter.invoke(str, companion)
+}
 
 class JsonParsingException(parent: Exception) : Exception(parent)
 
