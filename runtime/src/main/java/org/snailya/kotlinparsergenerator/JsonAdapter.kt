@@ -10,11 +10,14 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.io.StringWriter
 import java.util.*
+import java.util.Collections.emptyList
 
-var globalUnknownFieldReporter: (String, JsonAdapter<*>) -> Unit = { _, _ -> }
+object JsonAdapterGlobalConfig {
+  var globalUnknownFieldReporter: (String, JsonAdapter<*>) -> Unit = { _, _ -> }
 
-fun <T> logKnownField(str: String, companion: JsonAdapter<T>) {
-  globalUnknownFieldReporter.invoke(str, companion)
+  fun <T> logKnownField(str: String, companion: JsonAdapter<T>) {
+    globalUnknownFieldReporter.invoke(str, companion)
+  }
 }
 
 class JsonParsingException(parent: Exception) : Exception(parent)

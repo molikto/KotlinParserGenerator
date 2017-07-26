@@ -152,7 +152,7 @@ data class ObjectType(override val name: String, val fields: List<Field>) : Type
        |        jp.nextToken()
        |        when(fieldName) {
        |${indent("          ", fields.map { it.parse()}.joinToString("\n"))}
-       |          else -> { logUnknownField(fieldName, ${name}.Companion) }
+       |          else -> { JsonAdapterGlobalConfig.logUnknownField(fieldName, ${name}.Companion) }
        |        }
        |        jp.skipChildren()
        |      }
