@@ -8,6 +8,8 @@ This is a simple Kotlin script and some Kotlin file to generate JSON parsering c
 
 Why another JSON parser library?
 
+(Becuase the time I looked into the situation, no library can work with immutable data classes)
+
 Well... because their shouldn't be something like a JSON parser generator library...
 
 Why I say this?
@@ -39,9 +41,7 @@ But if you want some extra functionality, I might implement it.
 
 ## How to use it?
 
-Copy `ParserGenerator.kts` and files in package `org.snailya.kotlinparsergenerator` to proper places in your project. The object definition is written in
-the bottom of `ParserGenerator.kts` file, with small examples
-
+Use Gradle to include the runtime, the codegen can be a Java project, and run with IDE/command line when needed.
 
 It will require you define a method `logUnknownField` in the package you choose.
 
