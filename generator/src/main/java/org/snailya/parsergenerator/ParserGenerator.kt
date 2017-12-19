@@ -98,7 +98,7 @@ data class HandmadeObjectType(override val name: String) : Type(name) {
   override fun parse() = parserObject() + ".parse(jp)"
 }
 
-data class Field(val name: String, val ty: Type, val jsonName: String?, val isPrivate: Boolean = false, val deprecated: String = "") {
+data class Field(val name: String, val ty: Type, val jsonName: String?, val isPrivate: Boolean = false, val deprecated: String = "", var isOverride: Boolean = false) {
 
   val jn= jsonName ?: name
   fun parse() = """"$jn" -> { $name = ${ty.parse()} }"""
@@ -107,7 +107,7 @@ data class Field(val name: String, val ty: Type, val jsonName: String?, val isPr
 
   fun tempToField() = name // if (ty.isInstanceOf[NullableType]) name else name + "!!"
 
-  fun declare() = "        ${ (if (!deprecated.isEmpty()) "@Deprecated(\"$deprecated\") " else "")}${(if (isPrivate) "private " else "@JvmField ")}val $name: ${ty.name}"
+  fun declare() = "        ${ (if (!deprecated.isEmpty()) "@Deprecated(\"$deprecated\") " else "")}${(if (isPrivate) "private " else "@JvmField ")}${(if (isOverride) "override " else "")}val $name: ${ty.name}"
 
   fun serialize() =
     if (ty == IntType || ty == DoubleType || ty == LongType) {
@@ -366,7 +366,7 @@ object BaseSpec : Spec("org.snailya.demo.data", File("generator/src/main/java"),
     )
 
     o("Location",
-        f("latitude", double),
+        f("latitude", double).apply { isOverride = true },
         f("longitude", double),
         f("coordinateType", HandmadeObjectType("CoordinateType").n),
         f("countryCode", string.n),
