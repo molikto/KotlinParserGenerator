@@ -140,13 +140,23 @@ abstract class JsonAdapter<T> {
       return jf!!
     }
 
+    val booleanAdapter: JsonAdapter<Boolean> = object : JsonAdapter<Boolean>() {
+      override fun parse(jp: JsonParser): Boolean = jp.getValueAsBoolean(empty)
+
+      override val empty: Boolean = false
+
+      override fun serialize(t: Boolean, jg: JsonGenerator, writeStartEndObject: Boolean) {
+        jg.writeBoolean(t)
+      }
+
+    }
 
     val unitAdapter: JsonAdapter<Unit> = object : JsonAdapter<Unit>() {
 
       override val empty = Unit
 
       override fun parse(jp: JsonParser): Unit {
-        return Unit
+        return empty
       }
 
       override fun serialize(t: Unit, jg: JsonGenerator, writeStartEndObject: Boolean) {
@@ -199,7 +209,7 @@ abstract class JsonAdapter<T> {
       override val empty = ""
 
       override fun parse(jp: JsonParser): String {
-        return jp.getValueAsString("") // this will not throw error!!!
+        return jp.getValueAsString(empty) // this will not throw error!!!
       }
 
       override fun serialize(t: String, jg: JsonGenerator, writeStartEndObject: Boolean) {
@@ -239,10 +249,10 @@ abstract class JsonAdapter<T> {
 
         override fun parse(jp: JsonParser): T? {
           val next = jp.currentToken
-          if (next == JsonToken.VALUE_NULL) {
-            return null
+          return if (next == JsonToken.VALUE_NULL || next == null) {
+            null
           } else {
-            return from.parse(jp)
+            from.parse(jp)
           }
         }
 
@@ -272,7 +282,7 @@ abstract class JsonAdapter<T> {
 
         override fun parse(bytes: ByteArray): List<T> {
           if (bytes.size <= 2) {
-            return emptyList()
+            return empty
           } else {
             return super.parse(bytes)
           }

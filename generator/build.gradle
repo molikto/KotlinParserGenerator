@@ -6,6 +6,7 @@ apply plugin: 'maven'
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    compile project (':runtime')
 }
 repositories {
     mavenCentral()

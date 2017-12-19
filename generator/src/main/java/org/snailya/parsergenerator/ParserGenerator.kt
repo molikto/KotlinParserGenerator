@@ -93,7 +93,7 @@ data class JvmType(override val name: String, val defaultStr: String) : Type(nam
 }
 
 data class HandmadeObjectType(override val name: String) : Type(name) {
-  override fun default() = "${name}.Companion.empty"
+  override fun default() = "$name.Companion.empty"
   override fun parserObject() = name + ".Companion"
   override fun parse() = parserObject() + ".parse(jp)"
 }
@@ -125,13 +125,16 @@ data class Field(val name: String, val ty: Type, val jsonName: String?, val isPr
 
 
 
-data class ObjectType(override val name: String, val fields: List<Field>) : Type(name) {
+data class ObjectType(override val name: String, private val fields: List<Field>, var implements: String? = null) : Type(name) {
   override fun default() = "$name.Companion.empty"
+
+  private val extraImplements get() = if (implements != null) ("," + implements) else ""
+
   fun codgen() =
     """
        |
        |data class $name(
-       |${fields.map{it.declare()}.joinToString(",\n")})  : Serializable  {
+       |${fields.map{it.declare()}.joinToString(",\n")})  : Serializable $extraImplements {
        |
        |$ExtraCodeMark
        |
@@ -170,12 +173,32 @@ data class ObjectType(override val name: String, val fields: List<Field>) : Type
 
   override fun parse() = parserObject() + ".parse(jp)"
 }
-data class EnumType(override val name: String, val vs: List<String>, val defaultPos: Int) : Type(name) {
-  override fun default() = name + "." + vs[defaultPos]
+
+data class IntEnumItem(val name: String, val value: Int)
+
+
+data class IntEnumType(override val name: String, val vs: List<IntEnumItem>, val defaultPos: Int) : Type(name) {
+  override fun default() = name + "." + vs[defaultPos].name
   fun codgen() = """
-  |enum class $name {
-  |  ${vs.joinToString(", ")};
-  |  companion object : EnumByOrdinalJsonAdapter<$name>(arrayOf(${vs.map{a -> name + "." + a}.joinToString(", ")}), $name.${vs[defaultPos]})
+  |enum class $name(override val value: Int) : IntEnum {
+  |  ${vs.joinToString(", ") { "${it.name}(${it.value})"}};
+  |  companion object : IntEnumJsonAdapter<$name>(arrayOf(${vs.map{a -> name + "." + a.name}.joinToString(", ")}), $name.${vs[defaultPos].name})
+  |}
+  """.trimMargin()
+
+  override fun parserObject() = "${name}.Companion"
+  override fun parse() = parserObject() + ".parse(jp)"
+}
+
+data class StringEnumItem(val name: String, val value: String)
+
+
+data class StringEnumType(override val name: String, val vs: List<StringEnumItem>, val defaultPos: Int) : Type(name) {
+  override fun default() = name + "." + vs[defaultPos].name
+  fun codgen() = """
+  |enum class $name(override val value: String) : StringEnum {
+  |  ${vs.joinToString(", ") { "${it.name}(\"${it.value}\")"}};
+  |  companion object : StringEnumJsonAdapter<$name>(arrayOf(${vs.map{a -> name + "." + a.name}.joinToString(", ")}), $name.${vs[defaultPos].name})
   |}
   """.trimMargin()
 
@@ -217,22 +240,10 @@ open class Spec(val packageName: String, val root: File, val imports: List<Strin
 
   open val defaultImports =
       """
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.core.JsonToken
-import android.util.Log
-import android.net.Uri
+import com.fasterxml.jackson.core.*
 import java.io.*
 import java.util.*
-import android.text.TextUtils
-import android.util.Log
 import org.snailya.kotlinparsergenerator.*
-import org.snailya.kotlinparsergenerator.JsonAdapter
-import org.snailya.kotlinparsergenerator.ObjectJsonAdapter
-import org.snailya.kotlinparsergenerator.EnumByOrdinalJsonAdapter
-import java.io.IOException
-import java.text.SimpleDateFormat
-
 """.trimMargin()
 
   val dest = File(root.toString() + "/" + packageName.replace('.', '/'))
@@ -298,34 +309,61 @@ import java.text.SimpleDateFormat
 
 
   val os = ArrayList<ObjectType>()
-  val es = ArrayList<EnumType>()
+  val ies = ArrayList<IntEnumType>()
+  val ses = ArrayList<StringEnumType>()
   fun o(s: String, vararg fs: Field): ObjectType {
     val o = ObjectType(s, fs.toList())
     os.add(o)
     return o
   }
 
-  fun e(s: String, de: Int, vararg fs: String): EnumType {
-    val o = EnumType(s, fs.toList(), de)
-    es.add(o)
+  operator fun String.div(str: String)  = StringEnumItem(this, str)
+
+  operator fun String.div(str: Int) = IntEnumItem(this, str)
+
+  fun stringEnum(s: String, de: Int, vararg fs: StringEnumItem): StringEnumType {
+    val o = StringEnumType(s, fs.toList(), de)
+    ses.add(o)
+    return o
+  }
+
+  fun intEnum(s: String, de: Int, vararg fs: IntEnumItem): IntEnumType {
+    val o = IntEnumType(s, fs.toList(), de)
+    ies.add(o)
     return o
   }
 
   fun codegen() {
     println("codegen...")
-    es.forEach{e -> writeClass(e.name, e.codgen())}
+    ies.forEach{ e -> writeClass(e.name, e.codgen())}
+    ses.forEach{ e -> writeClass(e.name, e.codgen())}
     os.forEach{o -> writeClass(o.name, o.codgen())}
   }
 
 }
 
 
-object BaseSpec : Spec("org.snailya.demo.data", File("library/src/main/java"), emptyList()) {
+object BaseSpec : Spec("org.snailya.demo.data", File("generator/src/main/java"), emptyList()) {
+
+  @JvmStatic
+  fun main(args: Array<String>): Unit = codegen()
 
   val stringToUri = ConvertedType(string, JvmType("Uri", "defaultUri").n, "stringToUri")
 
   init {
-    e("SomeEnum", 0, "enum1", "enum2")
+
+    stringEnum("SomeStringEnum",
+        0,
+        "CLASSIC" / "what",
+        "LITE" / "jiji",
+        "SPOCK" / "this"
+    )
+    intEnum("SomeEnum",
+        0,
+        "CLASSIC" / 1,
+        "LITE" / 2,
+        "SPOCK" / 3
+    )
 
     o("Location",
         f("latitude", double),
@@ -337,7 +375,9 @@ object BaseSpec : Spec("org.snailya.demo.data", File("library/src/main/java"), e
         f("someArray", list(string)),
         f("someUrl", stringToUri),
         f("cached", boolean)
-    )
+    ).apply {
+      implements = "What"
+    }
   }
 }
 
