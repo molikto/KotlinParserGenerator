@@ -15,6 +15,8 @@ interface StringEnum {
 
 enum class IntEnumTest(override val value: Int) : IntEnum {
   TEST(1);
+
+
 }
 
 open class IntEnumJsonAdapter<T : IntEnum>(val enums: Array<T>, override val empty: T) : JsonAdapter<T>() {

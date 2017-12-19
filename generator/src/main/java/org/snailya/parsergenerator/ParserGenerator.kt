@@ -183,6 +183,7 @@ data class IntEnumType(override val name: String, val vs: List<IntEnumItem>, val
   |enum class $name(override val value: Int) : IntEnum {
   |  ${vs.joinToString(", ") { "${it.name}(${it.value})"}};
   |  companion object : IntEnumJsonAdapter<$name>(arrayOf(${vs.map{a -> name + "." + a.name}.joinToString(", ")}), $name.${vs[defaultPos].name})
+  |  override fun toString(): String = Companion.serialize(this)
   |}
   """.trimMargin()
 
@@ -199,6 +200,7 @@ data class StringEnumType(override val name: String, val vs: List<StringEnumItem
   |enum class $name(override val value: String) : StringEnum {
   |  ${vs.joinToString(", ") { "${it.name}(\"${it.value}\")"}};
   |  companion object : StringEnumJsonAdapter<$name>(arrayOf(${vs.map{a -> name + "." + a.name}.joinToString(", ")}), $name.${vs[defaultPos].name})
+  |  override fun toString(): String = Companion.serialize(this)
   |}
   """.trimMargin()
 
